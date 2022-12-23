@@ -4,11 +4,10 @@ screen.innerText = '0'
 
 container.addEventListener('click', (event) => {
     let input = event.target.innerText;
-    input = calc.isNumber(input);
-    if (isNaN(input)) {
-        calc.operatorInputHandler(input)
-    } else {
+    if (calc.isNumber(input)) {
         calc.numberInputHandler(input)
+    } else {
+        calc.operatorInputHandler(input)
     }
 
     console.log({
@@ -16,9 +15,9 @@ container.addEventListener('click', (event) => {
         currentValue: calc.currentValue,
         previousValue: calc.previousValue,
         operator: calc.operator,
+        previousOperator: calc.previousOperator,
         repeat: calc.repeatOperationValue
     });
-    console.log(calc.counter);
 })
 
 class Calculator {
@@ -26,13 +25,15 @@ class Calculator {
         this.currentValue = '';
         this.previousValue = undefined;
         this.operator = '';
+        this.previousOperator = '';
         this.repeatOperationValue = undefined;
         this.counter = 0;
+        
     }
 
     numberInputHandler = (digit) => {
         this.counter = 0;
-        if (this.operator !== '' && this.previousValue === undefined) {
+        if (this.operator !== '' && this.previousValue === '') {
             this.previousValue = this.currentValue;
             this.currentValue = '';
         }
@@ -53,62 +54,63 @@ class Calculator {
             this.currentValue = 0;
             this.previousValue = undefined;
             this.operator = '';
+            this.previousOperator = '';
 
             this.display();
             return;
         }
 
+        this.previousOperator = this.operator;
         this.operator = operator;
-        if (this.previousValue !== undefined) {
-            this.doMath();
+        if (this.previousOperator !== '' && this.operator !== '') {
+            console.log('case2')
+            this.doMath(this.previousOperator);
         }
 
     }
 
     equalsHandler = () => {
         this.counter++
-        this.doMath();
+        this.doMath(this.operator);
         return;
 
     }
 
-    doMath = () => {
-        if (this.operator === '+') {
+    doMath = (operator) => {
+        console.log('domath')
+        if (operator === '+') {
             if (this.counter > 1) {
                 this.currentValue += Number(this.repeatOperationValue);
                 this.display();
             } else {
                 this.repeatOperationValue = this.currentValue;
-                console.log(this.repeatOperationValue);
                 this.currentValue = Number(this.previousValue) + Number(this.currentValue);
                 this.display();
             }
         }
 
-        if (this.operator === '-') {
+        if (operator === '-') {
             if (this.counter > 1) {
                 this.currentValue -= Number(this.repeatOperationValue);
                 this.display();
             } else {
                 this.repeatOperationValue = this.currentValue;
-                console.log(this.repeatOperationValue);
                 this.currentValue = Number(this.previousValue) - Number(this.currentValue);
                 this.display();
             }
         }
 
-        if (this.operator === 'X') {
+        if (operator === 'X') {
             this.currentValue = Number(this.previousValue) * Number(this.currentValue);
             this.display();
         }
 
-        if (this.operator === '/') {
+        if (operator === '/') {
             if (this.counter > 1) {
                 this.currentValue /= Number(this.repeatOperationValue);
                 this.display();
             } else {
                 this.repeatOperationValue = this.currentValue;
-                console.log(this.repeatOperationValue);
                 this.currentValue = Number(this.previousValue) / Number(this.currentValue);
                 this.display();
             }
