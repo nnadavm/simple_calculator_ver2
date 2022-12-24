@@ -46,13 +46,14 @@ class Calculator {
     }
 
     operatorInputHandler = (operator) => {
-
-        if (operator === '=') {
-            this.equalsHandler();
-            return;
+        switch (operator) {
+            
         }
 
-        this.counter = 0;
+        if (operator === '=') {
+            this.doMath(this.operator);
+            return;
+        }
 
         if (operator === 'C') {
             this.currentValue = 0;
@@ -69,61 +70,20 @@ class Calculator {
         if (this.previousOperator !== '' && this.operator !== '' && this.lastClicked !== '=') {
             this.doMath(this.previousOperator);
         }
-
-    }
-
-    equalsHandler = () => {
-        this.counter++
-        this.doMath(this.operator);
-        return;
-
     }
 
     doMath = (operator) => {
-        if (operator === '+') {
-            if (this.lastClicked === '=') {
-                this.currentValue += Number(this.repeatOperationValue);
-                this.display();
-            } else {
-                this.repeatOperationValue = this.currentValue;
-                this.currentValue = Number(this.previousValue) + Number(this.currentValue);
-                this.display();
-            }
-        }
-
-        if (operator === '-') {
-            if (this.lastClicked === '=') {
-                this.currentValue -= Number(this.repeatOperationValue);
-                this.display();
-            } else {
-                this.repeatOperationValue = this.currentValue;
-                this.currentValue = Number(this.previousValue) - Number(this.currentValue);
-                this.display();
-            }
-        }
-
-        if (operator === 'X') {
-            if (this.lastClicked === '=') {
-                this.currentValue *= Number(this.repeatOperationValue);
-                this.display();
-            } else {
-                this.repeatOperationValue = this.currentValue;
-                this.currentValue = Number(this.previousValue) * Number(this.currentValue);
-                this.display();
-            }
-        }
-
-        if (operator === '/') {
-            if (this.lastClicked === '=') {
-                this.currentValue /= Number(this.repeatOperationValue);
-                this.display();
-            } else {
-                this.repeatOperationValue = this.currentValue;
-                this.currentValue = Number(this.previousValue) / Number(this.currentValue);
-                this.display();
-            }
+        if (this.lastClicked === '=') {
+            this.currentValue = eval(this.currentValue + operator + this.repeatOperationValue);
+            this.display();
+        } else {
+            this.repeatOperationValue = this.currentValue;
+            this.currentValue = eval(this.previousValue + operator + this.currentValue);
+            this.display();
         }
     }
+
+
 
     display = () => {
         screen.innerText = '';
