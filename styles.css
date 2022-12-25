@@ -8,8 +8,10 @@
 #wrapper {
     margin: 20px auto;
     width: 300px;
-    border-bottom: 0.5px black solid;
-
+    outline: 0.5px black solid;
+    border-radius: 15px;
+    z-index: 0;
+    overflow: hidden;
 }
 
 .container div {
@@ -17,15 +19,6 @@
     border-bottom: none;
     display: flex;
     justify-content: center;
-    border-radius: 15px;
-
-}
-
-button {
-    width: 100%;
-    color: white;
-    background-color: inherit;
-    border: none;
 }
 
 .col-sm:not(#screen):hover {
@@ -35,19 +28,19 @@ button {
 .col-sm {
     background-color: #807780 !important;
     padding: 0 !important;
+    color: white;
+    line-height: 73.75px;
 }
 
 .row {
     height: 73.75px;
 }
 
-.row > :last-child {
+.row> :last-child {
     background-color: #FEA00B !important;
 }
 
 #screen {
     background-color: #574856 !important;
     color: white;
-
 }
-

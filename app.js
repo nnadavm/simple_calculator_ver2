@@ -3,9 +3,13 @@ const container = document.getElementById('container');
 screen.innerText = '0'
 
 container.addEventListener('click', (event) => {
+    if(event.target.id === 'screen') {
+        return;
+    }
     let input = event.target.innerText;
     calc.clickInputHandler(input);
 })
+
 
 class Calculator {
     constructor() {
