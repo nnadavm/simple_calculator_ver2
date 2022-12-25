@@ -4,23 +4,7 @@ screen.innerText = '0'
 
 container.addEventListener('click', (event) => {
     let input = event.target.innerText;
-    if (calc.isNumber(input)) {
-        calc.numberInputHandler(input)
-    } else {
-        calc.operatorInputHandler(input)
-    }
-
-    calc.lastClicked = calc.convertDataType(input);
-
-    console.log({
-        inputFromButton: input,
-        currentValue: calc.currentValue,
-        previousValue: calc.previousValue,
-        operator: calc.operator,
-        previousOperator: calc.previousOperator,
-        repeat: calc.repeatOperationValue,
-        lastClicked: calc.lastClicked
-    });
+    calc.clickInputHandler(input);
 })
 
 class Calculator {
@@ -30,12 +14,38 @@ class Calculator {
         this.operator = '';
         this.previousOperator = '';
         this.repeatOperationValue = undefined;
-        this.counter = 0;
         this.lastClicked = undefined;
     }
 
+    clickInputHandler = (input) => {
+        if (input === '÷') {
+            input = '/';
+        }
+        if (input === '×') {
+            input = '*';
+        }
+
+        if (calc.isNumber(input)) {
+            calc.numberInputHandler(input)
+        } else {
+            calc.operatorInputHandler(input)
+        }
+
+        calc.lastClicked = calc.convertDataType(input);
+
+        console.log({
+            inputFromButton: input,
+            currentValue: this.currentValue,
+            previousValue: this.previousValue,
+            operator: this.operator,
+            previousOperator: this.previousOperator,
+            repeatOperationValue: this.repeatOperationValue,
+            lastClicked: this.lastClicked
+        });
+
+    }
+
     numberInputHandler = (digit) => {
-        this.counter = 0;
         if (this.operator !== '' && this.previousValue === undefined || isNaN(this.lastClicked) === true) {
             this.previousValue = this.currentValue;
             this.currentValue = '';
@@ -47,28 +57,25 @@ class Calculator {
 
     operatorInputHandler = (operator) => {
         switch (operator) {
-            
-        }
+            default:
+                this.previousOperator = this.operator;
+                this.operator = operator;
+                if (this.previousOperator !== '' && this.lastClicked !== '=') {
+                    this.doMath(this.previousOperator);
+                }
+                break;
 
-        if (operator === '=') {
-            this.doMath(this.operator);
-            return;
-        }
+            case '=':
+                this.doMath(this.operator);
+                break;
 
-        if (operator === 'C') {
-            this.currentValue = 0;
-            this.previousValue = undefined;
-            this.operator = '';
-            this.previousOperator = '';
-
-            this.display();
-            return;
-        }
-
-        this.previousOperator = this.operator;
-        this.operator = operator;
-        if (this.previousOperator !== '' && this.operator !== '' && this.lastClicked !== '=') {
-            this.doMath(this.previousOperator);
+            case 'C':
+                this.currentValue = 0;
+                this.previousValue = undefined;
+                this.operator = '';
+                this.previousOperator = '';
+                this.display();
+                break;
         }
     }
 
@@ -82,8 +89,6 @@ class Calculator {
             this.display();
         }
     }
-
-
 
     display = () => {
         screen.innerText = '';
